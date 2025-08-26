@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String?  @unique
+  name          String?
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  items         Item[]
+  outfits       Outfit[]
+  wearLogs      WearLog[]
+  calendarPlans CalendarPlan[]
+}
+
+model Item {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  imageUrl    String
+  bgRemovedUrl String? // processed image
+  category    Category
+  brand       String?
+  color       String?
+  fabric      String?
+  season      Season?
+  occasion    Occasion?
+  price       Decimal? @db.Decimal(10,2)
+  tags        Tag[]    @relation("ItemTags")
+  outfitItems OutfitItem[]
+  wearLogs    WearLog[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tag {
+  id     String @id @default(cuid())
+  label  String @unique
+  items  Item[] @relation("ItemTags")
+}
+
+model Outfit {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  notes     String?
+  items     OutfitItem[]
+  wearLogs  WearLog[]
+  calendarPlans CalendarPlan[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OutfitItem {
+  id       String @id @default(cuid())
+  outfitId String
+  outfit   Outfit @relation(fields: [outfitId], references: [id], onDelete: Cascade)
+  itemId   String
+  item     Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  // position slot e.g., "top", "bottom", "shoes", "accessory"
+  slot     String
+
+  @@unique([outfitId, itemId])
+}
+
+model WearLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  itemId    String?
+  item      Item?    @relation(fields: [itemId], references: [id])
+  outfitId  String?
+  outfit    Outfit?  @relation(fields: [outfitId], references: [id])
+  wornAt    DateTime @default(now())
+}
+
+model CalendarPlan {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date      DateTime
+  outfitId  String?
+  outfit    Outfit?  @relation(fields: [outfitId], references: [id])
+  notes     String?
+}
+
+enum Category { 
+  TOP 
+  BOTTOM 
+  DRESS 
+  OUTERWEAR 
+  SHOES 
+  ACCESSORY 
+  BAG 
+  HAT 
+  OTHER 
+}
+
+enum Season { 
+  SPRING 
+  SUMMER 
+  FALL 
+  WINTER 
+  ALL 
+}
+
+enum Occasion { 
+  CASUAL 
+  WORK 
+  FORMAL 
+  PARTY 
+  SPORT 
+  BEACH 
+  TRAVEL 
+}
