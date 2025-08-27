@@ -42,13 +42,19 @@ npm install @google-cloud/promisify @google-cloud/common
 ### Step 3: Environment Setup
 Add to your `.env.local`:
 ```env
-GOOGLE_APPLICATION_CREDENTIALS=/path/to/your-credentials.json
-GOOGLE_CLOUD_PROJECT_ID=your-project-id
+GOOGLE_APPLICATION_CREDENTIALS=/Users/drosi/Desktop/google-credentials.json
+GOOGLE_CLOUD_PROJECT_ID=drobe-470118
 ```
 
 ### Step 4: Test the Integration
 ```bash
-# Test package installation
+# Test package installationERROR:  42710: policy "Users can view own profile" for table "profiles" already exists
+
+
+ERROR:  42710: policy "Users can view own profile" for table "profiles" already exists
+
+
+
 node -e "console.log(require('@google-cloud/vision'))"
 
 # Start your app

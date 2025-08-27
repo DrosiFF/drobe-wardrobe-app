@@ -20,7 +20,7 @@ import {
 import { Button } from '@/components/ui/button'
 import TopBar from '@/components/TopBar'
 import { useUser } from '@clerk/nextjs'
-import { ItemsService } from '@/lib/supabase/items'
+import { itemsService } from '@/lib/supabase/items-fast'
 
 interface UploadedFile {
   file: File
@@ -72,7 +72,7 @@ export default function UploadPage() {
   const [loadingDetails, setLoadingDetails] = useState<number | null>(null)
   const [loadingPrice, setLoadingPrice] = useState<number | null>(null)
 
-  const itemsService = new ItemsService()
+  // itemsService is imported as a singleton
 
   // Drag and drop handlers
   const handleDragOver = useCallback((e: React.DragEvent) => {
@@ -363,28 +363,8 @@ export default function UploadPage() {
         const analysis = aiAnalysis[i]
         const file = uploadedFiles[i]
         
-        // Create item data from AI analysis
-        const itemData = {
-          name: analysis.type || 'Clothing Item',
-          image_url: file.preview, // Using blob URL for now
-          category: analysis.category as any,
-          brand: analysis.details?.brand || null,
-          colors: analysis.colors || [],
-          fabric: analysis.details?.material || null,
-          seasons: analysis.season || ['ALL_SEASONS'],
-          occasions: analysis.occasion || ['CASUAL'],
-          price: analysis.priceAnalysis?.estimatedPrice || null,
-          tags: [],
-          description: `AI analyzed item with ${analysis.confidence}% confidence`,
-          worn_count: 0,
-          last_worn: null,
-          notes: null,
-          ai_analysis: analysis,
-          wardrobe_id: null
-        }
-
-        // Save to database
-        await itemsService.createItem(itemData, user.id)
+        // Save to database using the new service method
+        await itemsService.createItemFromUpload(analysis, file.preview, user.id)
       }
 
       // Success - redirect to items page

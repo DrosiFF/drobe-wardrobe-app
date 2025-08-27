@@ -14,8 +14,8 @@ Add these to your `.env.local` file:
 
 ```bash
 # Clerk Configuration
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
-CLERK_SECRET_KEY=sk_test_your_key_here
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_bmF0aW9uYWwtd2Fob28tODEuY2xlcmsuYWNjb3VudHMuZGV2JA
+CLERK_SECRET_KEY=sk_test_NfDKxeMqm4zp16D0leAcvG43SExqK8ydiWtJA5ddk7
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/

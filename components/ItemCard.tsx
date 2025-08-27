@@ -9,7 +9,8 @@ import {
   Calendar,
   DollarSign,
   Tag,
-  Eye
+  Eye,
+  Trash2
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -33,6 +34,7 @@ interface ItemCardProps {
   onFavoriteToggle?: (id: string) => void
   onAddToOutfit?: (id: string) => void
   onSelect?: (id: string) => void
+  onDelete?: (id: string) => void
   onClick?: () => void
 }
 
@@ -50,6 +52,7 @@ export default function ItemCard({
   onFavoriteToggle,
   onAddToOutfit,
   onSelect,
+  onDelete,
   onClick,
 }: ItemCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
@@ -195,6 +198,13 @@ export default function ItemCard({
               <DropdownMenuItem onClick={() => onFavoriteToggle?.(id)}>
                 <Heart className="w-4 h-4 mr-2" />
                 {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={() => onDelete?.(id)}
+                className="text-destructive focus:text-destructive"
+              >
+                <Trash2 className="w-4 h-4 mr-2" />
+                Delete Item
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
